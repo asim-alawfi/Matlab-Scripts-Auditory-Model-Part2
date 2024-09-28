@@ -1,4 +1,4 @@
-%% Computation of non-symmetric POs for different values of time duration t_\mathrm{d} and delay (D)  
+%% Computation of non-symmetric POs for different values of tone duration t_\mathrm{d} and delay (D)  
 clear
     base=[pwd(),'\..\ddebiftool_snapshot_23October2022\'];
     base2=[pwd(),'\..\Supporting_function\'];
@@ -12,7 +12,7 @@ clear
 addpath([base2,'Supporting_functions'])
 %%
 load('br_crossing_threshold_try2.mat')
-%% Now, branching off from the branch of symmetric solutions to a branch of asymmetric solutions
+%% Now, branching off from the branch of symmetric solutions to a branch of non-symmetric solutions
 % (a note form me:period doubling bifurcation are expected to be detected).
 branch2=br_symmetry_wbifs(2);
 S2=dde_lincond_struct(size(branch2.point(1).profile,1),'profile',...
@@ -32,13 +32,13 @@ nspoev1args=addprefix('SetupPOEV1',poev1args);
 figure(334)
 hold on
 asym_brs2=br_contn(funcs_asy,asym_brs2,276);
-asym_brs2=br_rvers(asym_brs2)
+asym_brs2=br_rvers(asym_brs2);
 asym_brs2=br_contn(funcs_asy,asym_brs2,276);
 %%
 [asym_brs2_wbifs,nunst_td,bif_td,p_bif_td]=MonitorChange(funcs_asy,asym_brs2,...
     'range',2:length(asym_brs2.point),'printlevel',1,'print_residual_info',1,...
     'min_iterations',5);
-%% branching off from the branch of symmetric solutions to a branch of asymmetric solutions
+%% branching off from the branch of symmetric solutions to a branch of non-symmetric solutions
 % (a note form me:period doubling bifurcation are expected to be detected).
 branch_d=br_symmetry_wbifs(1);
 Sd=dde_lincond_struct(size(branch_d.point(1).profile,1),'profile',...
@@ -57,9 +57,14 @@ nspoev1args=addprefix('SetupPOEV1',poev1args);
 figure(333)
 clf;
 hold on
-asym_brs1=br_contn(funcs_asy,asym_brs1,350);
+asym_brs1=br_contn(funcs_asy,asym_brs1,340);
 [asym_brs1_wbifs,nunst_1,bif_1,p_bif_1]=MonitorChange(funcs_asy,asym_brs1,...
     'range',2:length(asym_brs1.point),'printlevel',1,'print_residual_info',1,...
     'min_iterations',5);
 %%
-save('asymmetric_branches_case12.mat')
+asym_brs1_wbifs=br_remove_extracolumns(asym_brs1_wbifs);
+asym_brs1=br_remove_extracolumns(asym_brs1);
+asym_brs2=br_remove_extracolumns(asym_brs2);
+asym_brs2_wbifs=br_remove_extracolumns(asym_brs2_wbifs);
+%%
+ save('asymmetric_branches_case12.mat')
